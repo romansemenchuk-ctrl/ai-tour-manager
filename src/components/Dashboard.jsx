@@ -17,58 +17,64 @@ export default function Dashboard({
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
       {/* Welcome Banner */}
-      <div className="glass-card" style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(13,17,33,0.45) 100%)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+      <div className="glass-card" style={{ background: 'var(--card-bg)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <span style={{ fontSize: '12px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--accent)' }}>Платформа Автоматизації</span>
-          <h2 style={{ fontSize: '24px', fontFamily: 'var(--font-heading)', fontWeight: '800', marginTop: '4px', color: '#fff' }}>
-            {artistName ? `Тур артиста: ${artistName}` : 'Новий концертний тур'}
+          <span style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1.5px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>ШІ АВТОМАТИЗАЦІЯ // ТУРИ ТА КОНЦЕРТИ</span>
+          <h2 style={{ fontSize: '30px', fontFamily: 'var(--font-heading)', fontWeight: '900', marginTop: '6px', textTransform: 'uppercase', letterSpacing: '-1px' }}>
+            {artistName ? `АРТИСТ: ${artistName}` : 'НОВИЙ КОНЦЕРТНИЙ ТУР'}
           </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginTop: '6px', maxWidth: '600px' }}>
-            Автономні ШІ-агенти опрацьовують контакти, логістику та промо. Ваша участь необхідна лише для фінальних затверджень.
+          <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '8px', maxWidth: '600px', lineHeight: '1.4' }}>
+            Мультиагентна система ШІ веде пошук залів, розрахунок логістики та маркетингові таски. Затверджуйте кроки на панелі справа.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <div className="status-pill status-signed" style={{ padding: '8px 16px', fontSize: '12px' }}>
-            <Shield size={14} style={{ marginRight: '6px' }} /> Human-in-the-Loop Active
+        <div>
+          <div className="status-pill status-signed" style={{ fontSize: '11px', padding: '6px 12px', border: '2px solid var(--border-color)', boxShadow: '2px 2px 0px var(--shadow-color)' }}>
+            <Shield size={12} style={{ marginRight: '6px' }} /> HUMAN-IN-THE-LOOP ACTIVE
           </div>
         </div>
       </div>
 
-      {/* Progress Timeline */}
+      {/* Progress Itinerary Timeline */}
       <div className="glass-card">
-        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', marginBottom: '16px', fontWeight: '600', color: '#fff' }}>Етапи автоматизації туру</h3>
+        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', marginBottom: '20px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.5px' }}>ЕТАПИ АКТИВАЦІЇ ТУРУ</h3>
         <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', overflowX: 'auto', padding: '10px 0' }}>
-          <div style={{ position: 'absolute', top: '29px', left: '0', right: '0', height: '2px', background: 'var(--border-color)', zIndex: '1' }}></div>
-          <div style={{ position: 'absolute', top: '29px', left: '0', width: `${((Math.min(currentStage, 6)) / 6) * 100}%`, height: '2px', background: 'var(--accent)', zIndex: '1', transition: 'width 0.4s ease' }}></div>
+          {/* Flat black line across timeline */}
+          <div style={{ position: 'absolute', top: '30px', left: '0', right: '0', height: '3px', background: 'var(--border-color)', zIndex: '1' }}></div>
           
           {steps.map((step, index) => {
             const isCompleted = currentStage > step.stage;
             const isActive = currentStage === step.stage;
             return (
-              <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: '2', position: 'relative', minWidth: '70px', cursor: 'pointer' }} onClick={() => currentStage >= step.stage && setActiveTab(step.stage === 1 ? 'analytics' : step.stage === 2 ? 'scout' : step.stage === 3 ? 'roadmap' : step.stage === 4 ? 'budget' : step.stage === 5 ? 'contracts' : 'promo')}>
+              <div 
+                key={index} 
+                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: '2', position: 'relative', minWidth: '70px', cursor: 'pointer' }}
+                onClick={() => currentStage >= step.stage && setActiveTab(step.stage === 1 ? 'analytics' : step.stage === 2 ? 'scout' : step.stage === 3 ? 'roadmap' : step.stage === 4 ? 'budget' : step.stage === 5 ? 'contracts' : 'promo')}
+              >
                 <div style={{ 
-                  width: '38px', 
-                  height: '38px', 
-                  borderRadius: '50%', 
-                  background: isCompleted ? 'var(--accent)' : isActive ? 'rgba(99,102,241,0.2)' : 'var(--bg-main)',
-                  border: `2px solid ${isCompleted || isActive ? 'var(--accent)' : 'var(--border-color)'}`,
+                  width: '40px', 
+                  height: '40px', 
+                  background: isCompleted ? 'var(--accent)' : isActive ? 'var(--card-bg)' : 'var(--bg-main)',
+                  border: `2px solid var(--border-color)`,
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'center',
-                  fontWeight: '700',
-                  color: isCompleted || isActive ? '#fff' : 'var(--text-muted)',
-                  boxShadow: isActive ? '0 0 15px rgba(99,102,241,0.4)' : 'none',
-                  fontSize: '13px'
+                  fontWeight: '900',
+                  color: isCompleted ? 'var(--accent-text)' : isActive ? 'var(--text-primary)' : 'var(--text-muted)',
+                  boxShadow: isActive ? '3px 3px 0px var(--shadow-color)' : 'none',
+                  fontSize: '13px',
+                  fontFamily: 'var(--font-mono)'
                 }}>
                   {isCompleted ? '✓' : index + 1}
                 </div>
                 <span style={{ 
                   fontSize: '11px', 
-                  marginTop: '8px', 
-                  fontWeight: isActive ? '700' : '500', 
-                  color: isActive ? 'var(--text-primary)' : isCompleted ? 'var(--text-secondary)' : 'var(--text-muted)' 
+                  marginTop: '10px', 
+                  fontWeight: '800', 
+                  textTransform: 'uppercase',
+                  color: isActive ? 'var(--text-primary)' : isCompleted ? 'var(--text-secondary)' : 'var(--text-muted)',
+                  fontFamily: 'var(--font-heading)'
                 }} className="sidebar-label">
                   {step.label}
                 </span>
@@ -78,129 +84,121 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* Stats Cards Grid */}
+      {/* Grid of Stats Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
         <div className="glass-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-            <span style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: '600' }}>Аудиторія в турі</span>
-            <div style={{ p: '8px', borderRadius: '8px', background: 'rgba(99,102,241,0.1)', color: 'var(--accent)', padding: '6px' }}>
-              <Users size={18} />
-            </div>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Аудиторія (Reach)</span>
+            <Users size={16} />
           </div>
-          <h3 style={{ fontSize: '24px', fontFamily: 'var(--font-heading)', color: '#fff', fontWeight: '700' }}>
+          <h3 style={{ fontSize: '26px', fontFamily: 'var(--font-heading)', color: 'var(--text-primary)', fontWeight: '900' }}>
             {stats.monthlyListeners.toLocaleString()}
           </h3>
-          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>Слухачів у цільових містах</p>
+          <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', fontFamily: 'var(--font-mono)' }}>Слухачів у містах</p>
         </div>
 
         <div className="glass-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-            <span style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: '600' }}>Загальний бюджет</span>
-            <div style={{ p: '8px', borderRadius: '8px', background: 'rgba(16,185,129,0.1)', color: 'var(--spotify-green)', padding: '6px' }}>
-              <DollarSign size={18} />
-            </div>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Прогнозована виручка</span>
+            <DollarSign size={16} />
           </div>
-          <h3 style={{ fontSize: '24px', fontFamily: 'var(--font-heading)', color: '#fff', fontWeight: '700' }}>
+          <h3 style={{ fontSize: '26px', fontFamily: 'var(--font-heading)', color: 'var(--text-primary)', fontWeight: '900' }}>
             ${stats.projectedRevenue.toLocaleString()}
           </h3>
-          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>Прогнозована виручка (100% збори)</p>
+          <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', fontFamily: 'var(--font-mono)' }}>При 100% зборах</p>
         </div>
 
         <div className="glass-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-            <span style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: '600' }}>Кількість міст</span>
-            <div style={{ p: '8px', borderRadius: '8px', background: 'rgba(168,85,247,0.1)', color: 'var(--purple-glow)', padding: '6px' }}>
-              <Compass size={18} />
-            </div>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Кількість залів</span>
+            <Compass size={16} />
           </div>
-          <h3 style={{ fontSize: '24px', fontFamily: 'var(--font-heading)', color: '#fff', fontWeight: '700' }}>
+          <h3 style={{ fontSize: '26px', fontFamily: 'var(--font-heading)', color: 'var(--text-primary)', fontWeight: '900' }}>
             {stats.totalCities}
           </h3>
-          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>Сплановано міст та клубів</p>
+          <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', fontFamily: 'var(--font-mono)' }}>Затверджені майданчики</p>
         </div>
 
         <div className="glass-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-            <span style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: '600' }}>Транспорт та логістика</span>
-            <div style={{ p: '8px', borderRadius: '8px', background: 'rgba(6,182,212,0.1)', color: 'var(--cyan-glow)', padding: '6px' }}>
-              <Calendar size={18} />
-            </div>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Загальна відстань</span>
+            <Calendar size={16} />
           </div>
-          <h3 style={{ fontSize: '24px', fontFamily: 'var(--font-heading)', color: '#fff', fontWeight: '700' }}>
+          <h3 style={{ fontSize: '26px', fontFamily: 'var(--font-heading)', color: 'var(--text-primary)', fontWeight: '900' }}>
             {stats.totalDistance} км
           </h3>
-          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>Довжина маршруту (мінімізована)</p>
+          <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', fontFamily: 'var(--font-mono)' }}>Маршрут туру</p>
         </div>
       </div>
 
-      {/* Main Info Blocks */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
-        {/* Dynamic Status / Actions */}
+      {/* Main Info Columns */}
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr', gap: '20px' }}>
+        {/* Step-by-Step Status Description */}
         <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '700', color: '#fff' }}>Поточний стан туру</h3>
+          <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.5px' }}>ПОТОЧНИЙ СТАН ТУРУ</h3>
           
-          <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '16px' }}>
+          <div style={{ border: 'var(--border-width) solid var(--border-color)', padding: '16px', background: 'var(--bg-main)' }}>
             {currentStage === 0 && (
               <div>
-                <h4 style={{ color: 'var(--accent)', fontWeight: '600', marginBottom: '8px' }}>Крок 1: Ініціалізація аналітики</h4>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  Агенти очікують імені артиста для парсингу стрімінгів. Будь ласка, введіть ім'я артиста у полі введення та запустіть первинний аналіз аудиторії.
+                <h4 style={{ fontWeight: '800', textTransform: 'uppercase', marginBottom: '6px', fontSize: '13px' }}>[ КРОК 1 ]: ІНІЦІАЛІЗАЦІЯ АНАЛІТИКИ</h4>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5', fontFamily: 'var(--font-mono)' }}>
+                  Система очікує назву артиста для початку аналізу стрімінгів. Будь ласка, введіть назву гурту або артиста в меню "Аналітика".
                 </p>
               </div>
             )}
             {currentStage === 1 && (
               <div>
-                <h4 style={{ color: 'var(--accent)', fontWeight: '600', marginBottom: '8px' }}>Крок 2: Затвердження міст</h4>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  Агент **Artist Profiler** проаналізував стрімінгову та соціальну активність артиста. Перейдіть до вкладки **Аналітика**, щоб налаштувати ціни квитків та затвердити список міст для туру.
+                <h4 style={{ fontWeight: '800', textTransform: 'uppercase', marginBottom: '6px', fontSize: '13px' }}>[ КРОК 2 ]: ЗАТВЕРДЖЕННЯ МІСТ ТУРУ</h4>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5', fontFamily: 'var(--font-mono)' }}>
+                  Агент **Profiler** обробив поточну статистику. Перейдіть до вкладки **Аналітика**, щоб налаштувати вартість квитків та затвердити список міст.
                 </p>
               </div>
             )}
             {currentStage === 2 && (
               <div>
-                <h4 style={{ color: 'var(--accent)', fontWeight: '600', marginBottom: '8px' }}>Крок 3: Пошук майданчиків</h4>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  Агент **Venue Scout** знайшов клуби у кожному місті з відповідною місткістю. Перейдіть у вкладку **Клуби**, щоб переглянути контакти та надіслати тестові ШІ-листи з пропозиціями дат.
+                <h4 style={{ fontWeight: '800', textTransform: 'uppercase', marginBottom: '6px', fontSize: '13px' }}>[ КРОК 3 ]: ПОШУК І ВИБІР ЗАЛІВ</h4>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5', fontFamily: 'var(--font-mono)' }}>
+                  Агент **Scout** підготував шортлист майданчиків. Відкрийте розділ **Пошук залів** для перегляду контактів та відправки пітч-імейлів.
                 </p>
               </div>
             )}
             {currentStage === 3 && (
               <div>
-                <h4 style={{ color: 'var(--accent)', fontWeight: '600', marginBottom: '8px' }}>Крок 4: Маршрут та логістика</h4>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  Агенти узгодили дати та сформували послідовність поїздки для уникнення зайвих витрат. Перевірте хронологію виступів та готелі у вкладці **Логістика**.
+                <h4 style={{ fontWeight: '800', textTransform: 'uppercase', marginBottom: '6px', fontSize: '13px' }}>[ КРОК 4 ]: ОПТИМІЗАЦІЯ МАРШРУТУ</h4>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5', fontFamily: 'var(--font-mono)' }}>
+                  Агент **Logistics** розрахував оптимальний ітінерарій, проживання команди та графік виступів. Перевірте деталі у вкладці **Логістика**.
                 </p>
               </div>
             )}
             {currentStage === 4 && (
               <div>
-                <h4 style={{ color: 'var(--accent)', fontWeight: '600', marginBottom: '8px' }}>Крок 5: Узгодження фінансів</h4>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  Агент **Tour Accountant** розрахував P&L туру з урахуванням витрат на логістику та оренду. Перегляньте точку беззбитковості та фінансові ризики у вкладці **Бюджет**.
+                <h4 style={{ fontWeight: '800', textTransform: 'uppercase', marginBottom: '6px', fontSize: '13px' }}>[ КРОК 5 ]: УЗГОДЖЕННЯ БЮДЖЕТУ</h4>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5', fontFamily: 'var(--font-mono)' }}>
+                  Агент **Accountant** підготував фінансову P&L модель. Перевірте витрати та прогнозований чистий дохід у вкладці **Бюджет**.
                 </p>
               </div>
             )}
             {currentStage === 5 && (
               <div>
-                <h4 style={{ color: 'var(--accent)', fontWeight: '600', marginBottom: '8px' }}>Крок 6: Контракти та Райдери</h4>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  Усі умови погоджено. Агент **Legal Assistant** згенерував договори виступів та технічні специфікації. Ознайомтесь та підпишіть документи у вкладці **Угоди**.
+                <h4 style={{ fontWeight: '800', textTransform: 'uppercase', marginBottom: '6px', fontSize: '13px' }}>[ КРОК 6 ]: ЮРИДИЧНЕ ОФОРМЛЕННЯ</h4>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5', fontFamily: 'var(--font-mono)' }}>
+                  Агент **Legal** сформував договори виступів та райдери. Перегляньте та підпишіть документи у вкладці **Угоди**.
                 </p>
               </div>
             )}
             {currentStage === 6 && (
               <div>
-                <h4 style={{ color: 'var(--accent)', fontWeight: '600', marginBottom: '8px' }}>Крок 7: Маркетинг & Запуск</h4>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  Договори підписано, дати анонсовано! Агент **Promo Manager** сформував план просування. Натисніть "Запустити промо" у правій панелі, щоб активувати таргет та почати збір аналітики продажів.
+                <h4 style={{ fontWeight: '800', textTransform: 'uppercase', marginBottom: '6px', fontSize: '13px' }}>[ КРОК 7 ]: ЗАПУСК РЕКЛАМНИХ КАМПАНІЙ</h4>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5', fontFamily: 'var(--font-mono)' }}>
+                  Договори підписано. Агент **Promo** підготував рекламні аудиторії ретаргету. Активуйте промо на ШІ-панелі справа.
                 </p>
               </div>
             )}
             {currentStage > 6 && (
               <div>
-                <h4 style={{ color: 'var(--spotify-green)', fontWeight: '600', marginBottom: '8px' }}>Вітаємо! Тур активний</h4>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  Всі підготовчі процеси завершено. Ви можете відслідковувати динаміку продажу квитків та рекламні бюджети у реальному часі у вкладці **Промо**.
+                <h4 style={{ fontWeight: '800', textTransform: 'uppercase', marginBottom: '6px', fontSize: '13px' }}>ТУР ОФІЦІЙНО ЗАПУЩЕНО</h4>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5', fontFamily: 'var(--font-mono)' }}>
+                  Всі підготовчі процеси завершено. Ведеться моніторинг продажу квитків та бюджетів таргетингу в реальному часі.
                 </p>
               </div>
             )}
@@ -212,31 +210,31 @@ export default function Dashboard({
                 const tabs = ["", "analytics", "scout", "roadmap", "budget", "contracts", "promo"];
                 setActiveTab(tabs[currentStage]);
               }}>
-                Перейти до кроку {currentStage} <ArrowRight size={14} />
+                ПЕРЕЙТИ ДО КРОКУ {currentStage} <ArrowRight size={14} />
               </button>
             )}
           </div>
         </div>
 
-        {/* System Overview info */}
+        {/* AI team state info */}
         <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '700', color: '#fff' }}>ШІ-Команда</h3>
+          <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '14px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.5px' }}>ШІ АГЕНТИ</h3>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--spotify-green)' }}></div>
-              <span style={{ fontSize: '13px', fontWeight: '500' }}>Агенти активні</span>
+              <div style={{ width: '8px', height: '8px', border: '1px solid var(--border-color)', background: 'var(--border-color)' }}></div>
+              <span>Всі системи активні</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--amber-glow)', animation: 'blink 1s infinite alternate' }}></div>
-              <span style={{ fontSize: '13px', fontWeight: '500' }}>Очікування дій людини</span>
+              <div style={{ width: '8px', height: '8px', border: '1px solid var(--border-color)', background: 'transparent' }}></div>
+              <span>Очікування затверджень</span>
             </div>
           </div>
 
-          <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px', marginTop: 'auto' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '12px' }}>
-              <Award size={16} />
-              <span>Версія системи: v1.0.2</span>
+          <div style={{ borderTop: 'var(--border-width) solid var(--border-color)', paddingTop: '16px', marginTop: 'auto', fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Award size={14} />
+              <span>BUILD: MONOCHROME v2.0.0</span>
             </div>
           </div>
         </div>

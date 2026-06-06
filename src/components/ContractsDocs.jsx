@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileText, Award, ShieldAlert, Check, RefreshCw } from 'lucide-react';
+import { FileText, ShieldAlert } from 'lucide-react';
 
 export default function ContractsDocs({ 
   currentStage, 
@@ -7,85 +7,88 @@ export default function ContractsDocs({
   venues, 
   onApprove 
 }) {
-  const [activeTab, setActiveTab] = useState("contract"); // contract | tech | hospitality
-  const [selectedVenue, setSelectedVenue] = useState(venues.filter(v => v.status === 'signed')[0] || venues[0] || null);
+  const [activeTab, setActiveTab] = useState("contract");
+  const [selectedVenue, setSelectedVenue] = useState(venues.filter(v => v.status === 'signed' || v.status === 'negotiating')[0] || venues[0] || null);
   const [isSigned, setIsSigned] = useState(false);
 
-  // Generate dynamic contract text
   const getContractText = () => {
     if (!selectedVenue) return "No venue selected.";
     return `PERFORMANCE AGREEMENT (DRAFT)
+=============================
+Date: June 6, 2026
 
-This agreement is entered into on June 6, 2026, by and between:
-ARTIST REPRESENTATIVE: AI Tour Agency on behalf of ${artistName || '[Artist]'}
-VENUE REPRESENTATIVE: ${selectedVenue.name} Booking Team, ${selectedVenue.city}, ${selectedVenue.country}
+BETWEEN:
+Artist Representative: AI Tour Agency on behalf of ${artistName.toUpperCase()}
+Venue Representative: ${selectedVenue.name.toUpperCase()} Booker (${selectedVenue.city}, ${selectedVenue.country})
 
-1. PERFORMANCE DETAILS:
-- Artist will perform a live musical concert at ${selectedVenue.name} in ${selectedVenue.city}.
+1. ENGAGEMENT:
+Artist agrees to perform a live music set at ${selectedVenue.name} in ${selectedVenue.city}.
 - Date: October 15, 2026.
-- Soundcheck Time: 17:30. Doors: 19:00. Showtime: 20:00.
+- Load-in: 16:00. Soundcheck: 17:30. Doors: 19:00. Show: 20:00.
 
-2. FINANCIAL Deal:
+2. FINANCIAL TERMS:
 - Venue agrees to pay Artist a flat Guarantee Fee of $${selectedVenue.capacity > 1000 ? '2500' : '1500'} USD.
-- In addition, Artist will receive 70% of Net Ticket Sales revenue after deduction of local tax and venue expenses ($500).
-- Payment of 50% deposit ($${selectedVenue.capacity > 1000 ? '1250' : '750'}) due upon signing. Remaining 50% due on night of show.
+- Split Deal: Artist receives 70% of Net Ticket Sales after venue expense deduction ($500).
+- Deposit: 50% paid upon signing. Remaining 50% paid on night of show.
 
-3. FORCE MAJEURE:
-Neither party shall be liable for cancellations due to Acts of God, war, government regulations, or other emergencies beyond control.
+3. UNDERTAKINGS:
+- Venue provides full in-house PA and lighting systems as specified in the Technical Rider.
+- Venue provides dressing room and catering as specified in the Hospitality Rider.
 
-IN WITNESS WHEREOF, the parties hereto sign this document:
-
-Signed by Artist Manager:  [ ELECTRONIC SIGNATURE CHECKED ]
-Signed by Venue Booker:  [ PENDING SIGNATURE ]
+SIGNATURES:
+Artist Manager: [ SIGNED ELECTRONICALLY ]
+Venue Booker:   [ SIGNATURE CONFIRMED ]
 `;
   };
 
   const getTechnicalRider = () => {
-    return `TECHNICAL RIDER (STAGE PLOT & AUDIO SPECIFICATIONS)
-Artist: ${artistName || '[Artist]'}
+    return `TECHNICAL RIDER (AUDIO SPECIFICATIONS)
+=====================================
+Artist: ${artistName.toUpperCase()}
 
-I. FRONT OF HOUSE (FOH) SYSTEM:
-- PA System must be capable of delivering clean 110dB SPL at mixing desk. L-Acoustics, d&b audiotechnik, or Meyer Sound preferred.
-- 32-channel digital console (Behringer X32 or Midas M32 minimum).
+1. FOH PA SYSTEM:
+- Multi-way professional sound reinforcement system (L-Acoustics, d&b audiotechnik).
+- Must deliver minimum 110dB SPL clean undistorted sound at FOH position.
 
-II. STAGE INPUT LIST (12 Channels):
-1. Kick Drum - Shure Beta 91A
-2. Snare Top - Shure SM57
-3. Hi-Hat - AKG C451
-4. Bass Guitar - DI Box (Radial)
-5. Synthesizer L - DI Box
-6. Synthesizer R - DI Box
-7. Backing Track L - DI Box
-8. Backing Track R - DI Box
-9. Main Vocal - Shure Beta 58 (Wireless)
-10. Backing Vocal - Shure SM58
-11. Spare Vocal - Shure SM58
-12. Talkback - Shure SM58
+2. INPUT LIST (12 CHANNELS):
+- CH 01: Kick Drum (Shure Beta 91A)
+- CH 02: Snare (Shure SM57)
+- CH 03: Hi-Hat (AKG C451)
+- CH 04: Bass DI (Radial active DI)
+- CH 05: Synth L (DI)
+- CH 06: Synth R (DI)
+- CH 07: Playback L (DI)
+- CH 08: Playback R (DI)
+- CH 09: Lead Vocal (Shure Beta 58 Wireless)
+- CH 10: Backing Vocal (Shure SM58)
+- CH 11: Spare Vocal (Shure SM58)
+- CH 12: Talkback (Shure SM58)
 
-III. MONITORING:
-- 4 Stereo In-Ear Monitor (IEM) Sennheiser G4 transmitters.
-- 2 wedge monitors on separate mixes for backline.
+3. MONITORING:
+- 4 Stereo IEM Mixes (Sennheiser G4 transmitters).
+- 2 wedge monitors on separate mixes on stage.
 `;
   };
 
   const getHospitalityRider = () => {
-    return `HOSPITALITY & CATERING RIDER
-Artist: ${artistName || '[Artist]'}
+    return `HOSPITALITY RIDER
+==================
+Artist: ${artistName.toUpperCase()}
 
-I. DRESSING ROOM REQUIREMENTS:
-- One (1) clean, private, lockable dressing room with comfortable seating for 6 people.
+1. DRESSING ROOM:
+- One (1) private, lockable room with comfortable seating for 6 people.
 - Mirror, clothing rack, and 6 clean towels.
 - High-speed Wi-Fi access.
 
-II. CATERING (To be ready in dressing room 2 hours before soundcheck):
-- Fresh fruit platter (bananas, grapes, berries).
-- Assorted sandwiches (including vegetarian options).
+2. CATERING (To be ready in dressing room 2 hours before soundcheck):
+- Fruit platter (bananas, grapes, berries).
+- Sandwiches (including vegetarian options).
 - 12 bottles of still mineral water (room temperature).
 - Selection of hot teas, honey, and fresh lemons.
 - 6 cans of energy drinks (sugar-free).
 
-III. ACCOMMODATION:
-- Venue/Promoter to cover 3 double hotel rooms (4-star minimum) near the venue with private parking.
+3. ACCOMMODATION:
+- 3 double rooms (4-star minimum) with private parking for tour van.
 `;
   };
 
@@ -95,14 +98,13 @@ III. ACCOMMODATION:
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
         {/* Document Selector Sidebar */}
         <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: 'fit-content' }}>
-          <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '700', color: '#fff' }}>
-            Документи туру
+          <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '14px', fontWeight: '900', textTransform: 'uppercase' }}>
+            ДОКУМЕНТИ ТУРУ
           </h4>
           
-          {/* Tabs */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <button 
               className={`btn ${activeTab === 'contract' ? 'btn-primary' : 'btn-secondary'}`}
@@ -127,45 +129,44 @@ III. ACCOMMODATION:
             </button>
           </div>
 
-          <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px', marginTop: '12px' }}>
-            <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
-              Концертний зал для контракту:
+          <div style={{ borderTop: 'var(--border-width) solid var(--border-color)', paddingTop: '16px', marginTop: '12px', fontFamily: 'var(--font-mono)' }}>
+            <label style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)', marginBottom: '8px', textTransform: 'uppercase' }}>
+              Концертний зал:
             </label>
             <select 
               className="input-glass" 
-              style={{ padding: '8px 12px', fontSize: '12px' }}
+              style={{ padding: '8px 12px', fontSize: '11px' }}
               value={selectedVenue?.name}
               onChange={(e) => setSelectedVenue(venues.find(v => v.name === e.target.value))}
             >
               {venues.map((v, i) => (
-                <option key={i} value={v.name}>{v.city} - {v.name}</option>
+                <option key={i} value={v.name}>{v.city.toUpperCase()} - {v.name.toUpperCase()}</option>
               ))}
             </select>
           </div>
         </div>
 
         {/* Text Document Viewer */}
-        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px', gridColumn: 'span 2' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px' }}>
-            <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '700', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <FileText size={18} style={{ color: 'var(--accent)' }} />
-              {activeTab === 'contract' ? 'Угода про виступ (Contract)' : activeTab === 'tech' ? 'Технічний райдер (Tech Rider)' : 'Побутовий райдер (Hospitality)'}
+            <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '900', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'uppercase' }}>
+              <FileText size={16} />
+              {activeTab === 'contract' ? 'Угода про виступ' : activeTab === 'tech' ? 'Технічний райдер' : 'Побутовий райдер'}
             </h4>
-            <span className="status-pill status-scouted" style={{ fontSize: '10px' }}>
-              Згенеровано ШІ
+            <span className="status-pill status-scouted">
+              ЗГЕНЕРОВАНО ШІ
             </span>
           </div>
 
           {/* Document Content */}
           <pre style={{ 
-            background: 'rgba(0,0,0,0.3)', 
+            background: 'var(--bg-main)', 
             padding: '20px', 
-            borderRadius: '12px', 
-            border: '1px solid var(--border-color)', 
+            border: 'var(--border-width) solid var(--border-color)', 
             fontFamily: 'var(--font-mono)', 
             fontSize: '11px', 
-            lineHeight: '1.5',
-            color: '#d1d5db',
+            lineHeight: '1.6',
+            color: 'var(--text-primary)',
             whiteSpace: 'pre-wrap',
             overflowY: 'auto',
             maxHeight: '400px'
@@ -173,23 +174,21 @@ III. ACCOMMODATION:
             {activeTab === 'contract' ? getContractText() : activeTab === 'tech' ? getTechnicalRider() : getHospitalityRider()}
           </pre>
 
-          {/* Electronic Signature Panel */}
+          {/* Signature Panel */}
           {activeTab === 'contract' && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
-              <div>
-                <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Підпис артиста</span>
-                <p style={{ fontSize: '14px', fontWeight: '600', color: isSigned ? 'var(--spotify-green)' : 'var(--text-muted)', marginTop: '4px' }}>
-                  {isSigned ? '✓ ПІДПИСАНО ЕЛЕКТРОННО' : 'Очікує вашого підпису'}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-main)', padding: '16px', border: '1px solid var(--border-color)', flexWrap: 'wrap', gap: '12px' }}>
+              <div style={{ fontFamily: 'var(--font-mono)' }}>
+                <span style={{ fontSize: '9px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Електронний підпис менеджера:</span>
+                <p style={{ fontSize: '13px', fontWeight: 'bold', color: isSigned ? 'var(--text-primary)' : 'var(--text-muted)', marginTop: '4px' }}>
+                  {isSigned ? '✓ ПІДПИСАНО ЦИФРОВИМ КЛЮЧЕМ' : 'ОЧІКУЄ ПІДПИСУ'}
                 </p>
               </div>
               {!isSigned ? (
                 <button className="btn btn-primary" onClick={handleSign}>
-                  Накласти підпис
+                  ПІДПИСАТИ УГОДУ
                 </button>
               ) : (
-                <div style={{ color: 'var(--spotify-green)', fontWeight: '700', fontSize: '12px' }}>
-                  Готово до надсилання
-                </div>
+                <div className="status-pill status-signed">Готово</div>
               )}
             </div>
           )}
@@ -197,18 +196,18 @@ III. ACCOMMODATION:
       </div>
 
       {currentStage === 5 && (
-        <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(245, 158, 11, 0.03)', border: '1px solid var(--amber-glow)' }}>
+        <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--card-bg)', border: '2px solid var(--border-color)', flexWrap: 'wrap', gap: '16px' }}>
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-            <ShieldAlert style={{ color: 'var(--amber-glow)' }} size={24} />
+            <ShieldAlert size={24} />
             <div>
-              <h4 style={{ color: '#fff', fontSize: '14px', fontWeight: '700' }}>Контракти готові до підписання</h4>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginTop: '2px' }}>
-                Коли всі три райдери та контракт перевірені, накладіть підпис та натисніть "Підписати та згенерувати PDF" у правій панелі.
+              <h4 style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: '900', textTransform: 'uppercase' }}>ОЧІКУЄТЬСЯ ПІДПИСАННЯ ДОГОВОРІВ</h4>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>
+                Будь ласка, накладіть підпис на договори з усіма залами, перш ніж переходити до запуску промо-кампанії.
               </p>
             </div>
           </div>
           <button className="btn btn-primary" onClick={onApprove} disabled={!isSigned}>
-            Затвердити угоди з усіма клубами
+            Підтвердити підписання угоди
           </button>
         </div>
       )}

@@ -52,6 +52,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [currentStage, setCurrentStage] = useState(0);
   const [artistName, setArtistName] = useState("");
+  const [theme, setTheme] = useState('dark');
+  const [isProcessing, setIsProcessing] = useState(false);
   
   // Core Data States
   const [citiesData, setCitiesData] = useState(INITIAL_CITIES);
@@ -64,8 +66,13 @@ export default function App() {
     profiler: 'idle', scout: 'idle', logistics: 'idle', finance: 'idle', legal: 'idle', promo: 'idle'
   });
   const [logs, setLogs] = useState([
-    { time: "04:52", agent: "system", text: "AI Tour Manager ініціалізовано. Очікування вибору артиста." }
+    { time: "05:13", agent: "system", text: "AI Tour Manager ініціалізовано. Очікування назви артиста." }
   ]);
+
+  // Bind theme variable to HTML dataset
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   const addLog = (agent, text) => {
     const now = new Date();
@@ -73,112 +80,140 @@ export default function App() {
     setLogs(prev => [...prev, { time: timeStr, agent, text }]);
   };
 
-  // Triggered when artist name is set
+  // Helper to run sequential steps to simulate realism
+  const runSimulationSequence = (agentKey, stepsList, onCompleteCallback) => {
+    setIsProcessing(true);
+    setAgentStatus(prev => ({ ...prev, [agentKey]: 'thinking' }));
+    
+    let currentStep = 0;
+    const runStep = () => {
+      if (currentStep < stepsList.length) {
+        addLog(agentKey, stepsList[currentStep]);
+        currentStep++;
+        setTimeout(runStep, 800); // 800ms delay per step
+      } else {
+        setAgentStatus(prev => ({ ...prev, [agentKey]: 'approval' }));
+        setIsProcessing(false);
+        if (onCompleteCallback) onCompleteCallback();
+      }
+    };
+    runStep();
+  };
+
+  // Triggered when artist name is set (Stage 0 -> 1)
   useEffect(() => {
     if (artistName) {
       setCurrentStage(1);
-      setAgentStatus(prev => ({ ...prev, profiler: 'thinking' }));
-      addLog("profiler", `Запуск пошуку статистики для артиста: ${artistName}`);
-      
-      // Simulate profile agent thinking
-      setTimeout(() => {
-        setAgentStatus(prev => ({ ...prev, profiler: 'approval' }));
-        addLog("profiler", "Аналіз завершено. Spotify Monthly Listeners: 550,000. Виявлено 5 оптимальних локацій.");
-        addLog("profiler", "Сформовано пропозицію цін квитків на основі PPP (купівельної спроможності) регіонів.");
-      }, 1500);
+      const initialSteps = [
+        `Ініціювання аналізу стрімінгів для артиста: ${artistName}`,
+        "Підключення до Spotify Web API... Успішно (200 OK)",
+        "Отримання демографічних метаданих та щомісячних прослуховувань за містами...",
+        "Виявлено 5 географічних центрів з високим потенціалом зборів.",
+        "Artist Profiler розрахував орієнтовні ціни GA та VIP квитків на основі купівельної спроможності."
+      ];
+      runSimulationSequence('profiler', initialSteps);
     }
   }, [artistName]);
 
   // Handle human approvals
   const handleApprove = () => {
+    if (isProcessing) return;
+
     if (currentStage === 1) {
-      // Approve Cities
-      setCurrentStage(2);
-      setActiveTab('scout');
-      setAgentStatus(prev => ({ ...prev, profiler: 'done', scout: 'thinking' }));
-      addLog("scout", "Міста затверджено користувачем. Початок сканування відповідних концертних залів...");
-      
-      setTimeout(() => {
-        setAgentStatus(prev => ({ ...prev, scout: 'approval' }));
-        addLog("scout", "Знайдено 9 відповідних майданчиків. Завантажено контакти та місткості.");
-        addLog("scout", "Створено персоналізовані шаблони листів для букерів.");
-      }, 1500);
+      // Approve Cities -> Search venues (Stage 1 -> 2)
+      setAgentStatus(prev => ({ ...prev, profiler: 'done' }));
+      const steps = [
+        "Міста затверджено користувачем. Запуск пошуку майданчиків.",
+        "Scout Agent: Парсинг локальних афіш та довідників концертів...",
+        "Знайдено 9 клубів з місткістю від 400 до 1800 осіб.",
+        "Отримано актуальні email-адреси букерів.",
+        "Згенеровано персоналізовані шаблони листів-запитів."
+      ];
+      runSimulationSequence('scout', steps, () => {
+        setCurrentStage(2);
+        setActiveTab('scout');
+      });
 
     } else if (currentStage === 2) {
-      // Approve Venues -> Start sending pitches & negotiate
-      setCurrentStage(3);
-      setActiveTab('roadmap');
-      setAgentStatus(prev => ({ ...prev, scout: 'done', logistics: 'thinking' }));
-      addLog("scout", "Масова розсилка активована. Відправлено 5 пропозицій...");
-      
-      // Simulate responses & logistics planner
-      setTimeout(() => {
-        addLog("scout", "Отримано відповідь від Atlas (Київ): Погоджено офер.");
-        addLog("scout", "Отримано відповідь від Malevich (Львів): Погоджено офер.");
-        addLog("scout", "Отримано відповідь від Stodola (Варшава): Переговори успішні.");
-        
-        // Update venue statuses
+      // Approve Venues -> Start sending pitches (Stage 2 -> 3)
+      setAgentStatus(prev => ({ ...prev, scout: 'done' }));
+      const steps = [
+        "Користувач надав дозвіл на розсилку. Відправка запитів...",
+        "Надіслано 5 листів-пропозицій до клубів Atlas, Stodola, Malevich, Palladium, Rio.",
+        "Отримано відповідь від Atlas: 'Узгоджуємо 12-15 жовтня. Умови підходять.'",
+        "Отримано офер від Stodola (Варшава): '14 жовтня вільне. Надішліть контракт.'",
+        "Logistics Planner: Розрахунок послідовності міст для уникнення зайвих переїздів..."
+      ];
+      runSimulationSequence('logistics', steps, () => {
         setVenues(prev => prev.map(v => 
           ["Atlas", "Stodola", "Malevich", "Palladium", "Rio"].includes(v.name)
-            ? { ...v, status: 'signed' }
-            : { ...v, status: 'rejected' }
+            ? { ...v, status: 'negotiating' }
+            : v
         ));
-
-        addLog("logistics", "Розрахунок оптимальної черги міст (маршруту) для зниження дорожніх витрат...");
-        setAgentStatus(prev => ({ ...prev, logistics: 'approval' }));
-        addLog("logistics", "Складено оптимальний Roadmap: Kyiv -> Warsaw -> Lviv -> Odesa -> Dnipro.");
-        addLog("logistics", "Заброньовано готелі з парковкою для тур-автобуса.");
-      }, 2000);
+        setCurrentStage(3);
+        setActiveTab('roadmap');
+      });
 
     } else if (currentStage === 3) {
-      // Approve Roadmap
-      setCurrentStage(4);
-      setActiveTab('budget');
-      setAgentStatus(prev => ({ ...prev, logistics: 'done', finance: 'thinking' }));
-      addLog("finance", "Розрахунок бюджету та точки беззбитковості (P&L)...");
-      
-      setTimeout(() => {
-        setAgentStatus(prev => ({ ...prev, finance: 'approval' }));
-        addLog("finance", "Фінансову модель побудовано. Точка беззбитковості: 44.8% від повних зборів.");
-        addLog("finance", "Прогнозований чистий прибуток при 75% заповненості: $43,750 USD.");
-      }, 1500);
+      // Approve Roadmap -> Build budget (Stage 3 -> 4)
+      setAgentStatus(prev => ({ ...prev, logistics: 'done' }));
+      const steps = [
+        "Ітінерарій затверджено. Оцінка бюджету.",
+        "Tour Accountant: Розрахунок дорожніх витрат та проживання на 6 осіб команди...",
+        "Додано витрати на пальне ($1,900) та оренду беклайну ($3,500).",
+        "Розраховано точку беззбитковості для кожної дати туру."
+      ];
+      runSimulationSequence('finance', steps, () => {
+        setCurrentStage(4);
+        setActiveTab('budget');
+      });
 
     } else if (currentStage === 4) {
-      // Approve Budget
-      setCurrentStage(5);
-      setActiveTab('contracts');
-      setAgentStatus(prev => ({ ...prev, finance: 'done', legal: 'thinking' }));
-      addLog("legal", "Генерація контрактів, технічних та побутових райдерів...");
-      
-      setTimeout(() => {
-        setAgentStatus(prev => ({ ...prev, legal: 'approval' }));
-        addLog("legal", "Договори згенерувано на базі умов гарантій та сплітів.");
-        addLog("legal", "Райдери адаптовані під вимоги залів. Документи готові до підпису.");
-      }, 1500);
+      // Approve Budget -> Generate documents (Stage 4 -> 5)
+      setAgentStatus(prev => ({ ...prev, finance: 'done' }));
+      const steps = [
+        "Фінансовий кошторис погоджено. Підготовка документів.",
+        "Legal Assistant: Формування Performance Agreements на базі погоджених умов...",
+        "Згенеровано технічний райдер (12 каналів FOH) та побутовий райдер.",
+        "Контракти завантажено. Очікується цифровий підпис."
+      ];
+      runSimulationSequence('legal', steps, () => {
+        setCurrentStage(5);
+        setActiveTab('contracts');
+      });
 
     } else if (currentStage === 5) {
-      // Sign Contracts
-      setCurrentStage(6);
-      setActiveTab('promo');
-      setAgentStatus(prev => ({ ...prev, legal: 'done', promo: 'thinking' }));
-      addLog("legal", "Всі договори підписано цифровим підписом. Копії збережено в PDF.");
-      addLog("promo", "Формування маркетингової стратегії та рекламного бюджету...");
-      
-      setTimeout(() => {
-        setAgentStatus(prev => ({ ...prev, promo: 'approval' }));
-        addLog("promo", "Підготовлено аудиторії ретаргетингу на базі Spotify Pixels.");
-        addLog("promo", "Рекламні макети та рекламні посилання сформовані. Очікування старту.");
-      }, 1500);
+      // Sign Contracts -> Marketing setup (Stage 5 -> 6)
+      setAgentStatus(prev => ({ ...prev, legal: 'done' }));
+      const steps = [
+        "Контракти підписано менеджером артиста.",
+        "Синхронізація підписів з представниками залів... Успішно.",
+        "Promo Manager: Підготовка рекламної кампанії...",
+        "Налаштування кастомних аудиторій у Facebook Ads Manager.",
+        "Створено посилання для покупки квитків через Concert.ua / Eventim."
+      ];
+      runSimulationSequence('promo', steps, () => {
+        setCurrentStage(6);
+        setActiveTab('promo');
+      });
 
     } else if (currentStage === 6) {
-      // Launch Promo
-      setCurrentStage(7);
-      setActiveTab('dashboard');
-      setAgentStatus(prev => ({ 
-        profiler: 'done', scout: 'done', logistics: 'done', finance: 'done', legal: 'done', promo: 'done' 
-      }));
-      addLog("promo", "Промо запущено! Продажі квитків активовані.");
-      addLog("system", "ТУР ОФІЦІЙНО ЗАПУЩЕНО. Жива статистика зборів доступна на панелі.");
+      // Launch Promo (Stage 6 -> 7)
+      setAgentStatus(prev => ({ ...prev, promo: 'done' }));
+      const steps = [
+        "Дозвіл отримано. Активація бюджету на таргетинг.",
+        "Meta Ads кампанія: ЗАПУЩЕНО.",
+        "Ticketing API підключено. Початок відслідковування зборів.",
+        "Система AI Tour Manager переведена в режим активного моніторингу."
+      ];
+      runSimulationSequence('promo', steps, () => {
+        setCurrentStage(7);
+        setActiveTab('dashboard');
+        setAgentStatus({
+          profiler: 'done', scout: 'done', logistics: 'done', finance: 'done', legal: 'done', promo: 'done'
+        });
+        addLog("system", "ТУР УСПІШНО ЗАПУЩЕНО В РЕАЛЬНОМУ ЧАСІ!");
+      });
     }
   };
 
@@ -217,6 +252,7 @@ export default function App() {
   };
 
   const handleReset = () => {
+    if (isProcessing) return;
     setCurrentStage(0);
     setArtistName("");
     setActiveTab('analytics');
@@ -227,7 +263,7 @@ export default function App() {
       profiler: 'idle', scout: 'idle', logistics: 'idle', finance: 'idle', legal: 'idle', promo: 'idle'
     });
     setLogs([
-      { time: "04:52", agent: "system", text: "Симуляцію скинуто. AI Tour Manager готовий до нового запуску." }
+      { time: "05:13", agent: "system", text: "Симуляцію скинуто. AI Tour Manager готовий до нового запуску." }
     ]);
   };
 
@@ -243,7 +279,7 @@ export default function App() {
               monthlyListeners: citiesData.reduce((acc, c) => acc + c.monthlyListeners, 0),
               projectedRevenue: financeData.ticketSalesMax + financeData.merchSalesMax,
               totalCities: citiesData.length,
-              totalDistance: roadmap.reduce((acc, r) => acc + (r.city === 'Kyiv' ? 0 : 450), 0) // rough mock
+              totalDistance: roadmap.reduce((acc, r) => acc + (r.city === 'Kyiv' ? 0 : 450), 0)
             }}
             setActiveTab={setActiveTab}
           />
@@ -312,7 +348,7 @@ export default function App() {
       {/* Sidebar Navigation */}
       <aside className="sidebar">
         <div className="sidebar-header">
-          <Flame size={24} style={{ color: 'var(--accent)' }} />
+          <Flame size={24} style={{ color: 'var(--border-color)' }} />
           <h2>AI Tour Manager</h2>
         </div>
         <nav className="sidebar-nav">
@@ -320,100 +356,94 @@ export default function App() {
             className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
             onClick={() => setActiveTab('dashboard')}
           >
-            <LayoutDashboard size={18} />
+            <LayoutDashboard size={16} />
             <span className="sidebar-label">Дашборд</span>
           </button>
           <button 
             className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
             onClick={() => setActiveTab('analytics')}
             disabled={currentStage === 0}
-            style={{ opacity: currentStage === 0 ? 0.4 : 1, cursor: currentStage === 0 ? 'not-allowed' : 'pointer' }}
           >
-            <BarChart2 size={18} />
-            <span className="sidebar-label">Аналітика аудиторії</span>
+            <BarChart2 size={16} />
+            <span className="sidebar-label">Аналітика</span>
           </button>
           <button 
             className={`nav-item ${activeTab === 'scout' ? 'active' : ''}`}
             onClick={() => setActiveTab('scout')}
             disabled={currentStage < 2}
-            style={{ opacity: currentStage < 2 ? 0.4 : 1, cursor: currentStage < 2 ? 'not-allowed' : 'pointer' }}
           >
-            <Search size={18} />
+            <Search size={16} />
             <span className="sidebar-label">Пошук залів</span>
           </button>
           <button 
             className={`nav-item ${activeTab === 'roadmap' ? 'active' : ''}`}
             onClick={() => setActiveTab('roadmap')}
             disabled={currentStage < 3}
-            style={{ opacity: currentStage < 3 ? 0.4 : 1, cursor: currentStage < 3 ? 'not-allowed' : 'pointer' }}
           >
-            <Map size={18} />
-            <span className="sidebar-label">Маршрути & Логістика</span>
+            <Map size={16} />
+            <span className="sidebar-label">Логістика</span>
           </button>
           <button 
             className={`nav-item ${activeTab === 'budget' ? 'active' : ''}`}
             onClick={() => setActiveTab('budget')}
             disabled={currentStage < 4}
-            style={{ opacity: currentStage < 4 ? 0.4 : 1, cursor: currentStage < 4 ? 'not-allowed' : 'pointer' }}
           >
-            <DollarSign size={18} />
-            <span className="sidebar-label">Бюджет & Фінанси</span>
+            <DollarSign size={16} />
+            <span className="sidebar-label">Бюджет</span>
           </button>
           <button 
             className={`nav-item ${activeTab === 'contracts' ? 'active' : ''}`}
             onClick={() => setActiveTab('contracts')}
             disabled={currentStage < 5}
-            style={{ opacity: currentStage < 5 ? 0.4 : 1, cursor: currentStage < 5 ? 'not-allowed' : 'pointer' }}
           >
-            <FileText size={18} />
-            <span className="sidebar-label">Договори & Райдери</span>
+            <FileText size={16} />
+            <span className="sidebar-label">Угоди & Райдери</span>
           </button>
           <button 
             className={`nav-item ${activeTab === 'promo' ? 'active' : ''}`}
             onClick={() => setActiveTab('promo')}
             disabled={currentStage < 6}
-            style={{ opacity: currentStage < 6 ? 0.4 : 1, cursor: currentStage < 6 ? 'not-allowed' : 'pointer' }}
           >
-            <Megaphone size={18} />
-            <span className="sidebar-label">Маркетинг & Промо</span>
+            <Megaphone size={16} />
+            <span className="sidebar-label">Маркетинг</span>
           </button>
         </nav>
       </aside>
 
-      {/* Main Workspace */}
+      {/* Main Content Workspace */}
       <main className="main-content">
         <div className="page-header">
           <div className="page-title">
             <h1>
               {activeTab === 'dashboard' ? 'Головний Дашборд' : 
                activeTab === 'analytics' ? 'Аналіз Аудиторії' : 
-               activeTab === 'scout' ? 'Контакти Концертних Залів' : 
-               activeTab === 'roadmap' ? 'Планування Логістики' : 
-               activeTab === 'budget' ? 'Фінансова Карта Туру' : 
-               activeTab === 'contracts' ? 'Юридичні Документи' : 'Маркетинг & Просування'}
+               activeTab === 'scout' ? 'Контактна База Клубів' : 
+               activeTab === 'roadmap' ? 'Планування Маршруту' : 
+               activeTab === 'budget' ? 'Бюджет Туру' : 
+               activeTab === 'contracts' ? 'Юридичні Договори' : 'Маркетингові Метрики'}
             </h1>
             <p>
-              {activeTab === 'dashboard' ? 'Загальний огляд планування та реальних показників туру' : 
-               activeTab === 'analytics' ? 'ШІ-прогнозування цільових міст на основі стрімінгів' : 
-               activeTab === 'scout' ? 'Шортлист клубів та статус погодження оферів' : 
+              {activeTab === 'dashboard' ? 'Огляд ключових показників туру' : 
+               activeTab === 'analytics' ? 'Прогнозування цільових міст на основі стрімінгів' : 
+               activeTab === 'scout' ? 'Контакти клубів та статус оферів' : 
                activeTab === 'roadmap' ? 'Графік переїздів, таймінг завантаження та готелі' : 
-               activeTab === 'budget' ? 'Бюджетування, витрати на логістику та прибутки' : 
-               activeTab === 'contracts' ? 'Автоматично сформовані контракти та технічні райдери' : 'Налаштування таргетингу та моніторинг продажу квитків'}
+               activeTab === 'budget' ? 'Кошторис туру, витрати та чистий прибуток' : 
+               activeTab === 'contracts' ? 'Договори про виступи та райдери' : 'Рекламні бюджети та динаміка збору квитків'}
             </p>
           </div>
           {artistName && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.03)', padding: '8px 16px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
-              <Flame size={16} style={{ color: 'var(--accent)' }} />
-              <span style={{ fontSize: '13px', fontWeight: '600' }}>Артист: {artistName}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', border: 'var(--border-width) solid var(--border-color)', padding: '8px 16px', fontWeight: 'bold' }}>
+              <Flame size={16} />
+              <span style={{ fontSize: '12px' }}>{artistName.toUpperCase()}</span>
             </div>
           )}
         </div>
 
-        {/* Dynamic Inner View */}
+        {/* Render selected screen */}
         {renderContent()}
       </main>
 
-      {/* Live Agent Console (Right Drawer) */}
+      {/* Right AI Status Bar */}
       <AgentDrawer 
         agentStatus={agentStatus}
         logs={logs}
@@ -421,6 +451,9 @@ export default function App() {
         onApprove={handleApprove}
         onReset={handleReset}
         artistName={artistName}
+        theme={theme}
+        setTheme={setTheme}
+        isProcessing={isProcessing}
       />
     </div>
   );

@@ -6,11 +6,10 @@ export default function BudgetFinance({
   financeData, 
   onApprove 
 }) {
-  const [salesCapacity, setSalesCapacity] = useState(75); // simulated ticket sales percentage
+  const [salesCapacity, setSalesCapacity] = useState(75);
 
   const { ticketSalesMax, merchSalesMax, hotelCost, travelCost, productionCost, marketingCost, agencyFeeMax } = financeData;
 
-  // Recalculate based on simulated sales capacity
   const ratio = salesCapacity / 100;
   const ticketRevenue = ticketSalesMax * ratio;
   const merchRevenue = merchSalesMax * ratio;
@@ -23,21 +22,20 @@ export default function BudgetFinance({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Financial Overview Card */}
       <div className="glass-card">
-        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '700', color: '#fff', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <DollarSign size={20} style={{ color: 'var(--spotify-green)' }} />
-          Бюджет & Фінансова модель туру
+        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '900', color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'uppercase' }}>
+          <DollarSign size={20} />
+          КОШТОРИС ТУРУ (PROFIT & LOSS STATEMENT)
         </h3>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '20px' }}>
-          Агент **Tour Accountant** розрахував P&L (прибутки та збитки) туру на базі погоджених клубів, вартості переїздів, проживання команди та рекламного плану.
+        <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginBottom: '20px', fontFamily: 'var(--font-mono)' }}>
+          Агент **Accountant** розрахував P&L баланс туру. Ви можете протестувати рентабельність за допомогою повзунка заповненості.
         </p>
 
-        {/* Dynamic Profit Slider */}
-        <div style={{ background: 'rgba(0,0,0,0.2)', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-color)', marginBottom: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <span style={{ fontSize: '14px', fontWeight: '600', color: '#fff' }}>Симуляція продажу квитків:</span>
-            <span style={{ fontSize: '18px', fontWeight: '800', color: 'var(--spotify-green)' }}>{salesCapacity}% заповненості залів</span>
+        {/* Dynamic Capacity Range Slider */}
+        <div style={{ background: 'var(--bg-main)', padding: '20px', border: 'var(--border-width) solid var(--border-color)', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', fontFamily: 'var(--font-mono)' }}>
+            <span style={{ fontSize: '13px', fontWeight: 'bold' }}>СИМУЛЯЦІЯ ПРОДАЖІВ:</span>
+            <span style={{ fontSize: '18px', fontWeight: '900' }}>{salesCapacity}% ЗАПОВНЕННОСТІ</span>
           </div>
           <input 
             type="range" 
@@ -47,81 +45,81 @@ export default function BudgetFinance({
             value={salesCapacity}
             onChange={(e) => setSalesCapacity(parseInt(e.target.value))}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-secondary)', marginTop: '8px' }}>
-            <span>Мінімум (30%)</span>
-            <span>Точка беззбитковості: {breakEvenCapacity.toFixed(0)}%</span>
-            <span>Солд-аут (100%)</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-secondary)', marginTop: '8px', fontFamily: 'var(--font-mono)' }}>
+            <span>МІН (30%)</span>
+            <span>ТОЧКА БЕЗЗБИТКОВОСТІ: {breakEvenCapacity.toFixed(0)}%</span>
+            <span>СОЛД-АУТ (100%)</span>
           </div>
         </div>
 
-        {/* Financial P&L Statement Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+        {/* P&L Statement Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
           {/* Revenue */}
-          <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '16px' }}>
-            <h4 style={{ fontFamily: 'var(--font-heading)', color: 'var(--spotify-green)', fontWeight: '700', fontSize: '14px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <TrendingUp size={16} /> ДОХОДИ (Планові)
+          <div style={{ border: 'var(--border-width) solid var(--border-color)', padding: '16px', background: 'var(--bg-main)' }}>
+            <h4 style={{ fontFamily: 'var(--font-heading)', color: 'var(--text-primary)', fontWeight: '900', fontSize: '13px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px', textTransform: 'uppercase' }}>
+              <TrendingUp size={14} /> ДОХОДИ (REVENUE)
             </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '13px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px', fontFamily: 'var(--font-mono)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Продаж квитків:</span>
-                <span style={{ color: '#fff', fontWeight: '600' }}>${ticketRevenue.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+                <span>Продаж квитків:</span>
+                <span style={{ fontWeight: 'bold' }}>+${ticketRevenue.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Продаж мерчендайзу:</span>
-                <span style={{ color: '#fff', fontWeight: '600' }}>${merchRevenue.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+                <span>Продаж мерчу:</span>
+                <span style={{ fontWeight: 'bold' }}>+${merchRevenue.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '14px', paddingTop: '6px' }}>
-                <span style={{ color: '#fff' }}>Загальний дохід:</span>
-                <span style={{ color: 'var(--spotify-green)' }}>${totalRevenue.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: '900', fontSize: '13px', paddingTop: '6px' }}>
+                <span>ЗАГАЛЬНИЙ ДОХІД:</span>
+                <span>+${totalRevenue.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
               </div>
             </div>
           </div>
 
           {/* Expenses */}
-          <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '16px' }}>
-            <h4 style={{ fontFamily: 'var(--font-heading)', color: 'var(--rose-glow)', fontWeight: '700', fontSize: '14px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <AlertTriangle size={16} /> ВИТРАТИ (Планові)
+          <div style={{ border: 'var(--border-width) solid var(--border-color)', padding: '16px', background: 'var(--bg-main)' }}>
+            <h4 style={{ fontFamily: 'var(--font-heading)', color: 'var(--text-primary)', fontWeight: '900', fontSize: '13px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px', textTransform: 'uppercase' }}>
+              <AlertTriangle size={14} /> ВИТРАТИ (EXPENSES)
             </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px', fontFamily: 'var(--font-mono)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '4px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Проживання (Готелі):</span>
-                <span style={{ color: '#fff', fontWeight: '600' }}>-${hotelCost}</span>
+                <span>Проживання (Готелі):</span>
+                <span>-${hotelCost}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '4px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Логістика (Бензин/Транспорт):</span>
-                <span style={{ color: '#fff', fontWeight: '600' }}>-${travelCost}</span>
+                <span>Транспорт / Бензин:</span>
+                <span>-${travelCost}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '4px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Локальний стаф / Оренда:</span>
-                <span style={{ color: '#fff', fontWeight: '600' }}>-${productionCost}</span>
+                <span>Оренда залів / Стаф:</span>
+                <span>-${productionCost}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '4px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Реклама та просування:</span>
-                <span style={{ color: '#fff', fontWeight: '600' }}>-${marketingCost}</span>
+                <span>Рекламні бюджети:</span>
+                <span>-${marketingCost}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '4px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Комісія букінгу (ШІ):</span>
-                <span style={{ color: '#fff', fontWeight: '600' }}>-${agencyFee.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+                <span>Букінг-комісія ШІ:</span>
+                <span>-${agencyFee.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '14px', paddingTop: '4px' }}>
-                <span style={{ color: '#fff' }}>Загальні витрати:</span>
-                <span style={{ color: 'var(--rose-glow)' }}>-${totalExpenses.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: '900', fontSize: '13px', paddingTop: '4px' }}>
+                <span>ЗАГАЛЬНІ ВИТРАТИ:</span>
+                <span>-${totalExpenses.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Net Profit Summary */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '12px', border: '1px solid var(--border-color)', marginTop: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-main)', padding: '16px', border: 'var(--border-width) solid var(--border-color)', marginTop: '20px' }}>
           <div>
-            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Прогнозований Чистий Прибуток</span>
-            <h3 style={{ fontSize: '28px', fontFamily: 'var(--font-heading)', color: netProfit >= 0 ? 'var(--spotify-green)' : 'var(--rose-glow)', fontWeight: '800', marginTop: '4px' }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>Прогнозований Чистий Прибуток</span>
+            <h3 style={{ fontSize: '28px', fontFamily: 'var(--font-heading)', color: 'var(--text-primary)', fontWeight: '900', marginTop: '4px' }}>
               ${netProfit.toLocaleString(undefined, {maximumFractionDigits: 0})}
             </h3>
           </div>
-          <div style={{ textAlign: 'right' }}>
-            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Рентабельність (Margin)</span>
-            <p style={{ fontSize: '18px', fontWeight: '700', color: '#fff', marginTop: '4px' }}>
+          <div style={{ textAlign: 'right', fontFamily: 'var(--font-mono)' }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Рентабельність (Margin)</span>
+            <p style={{ fontSize: '18px', fontWeight: 'bold', marginTop: '4px' }}>
               {totalRevenue > 0 ? ((netProfit / totalRevenue) * 100).toFixed(1) : 0}%
             </p>
           </div>
@@ -129,18 +127,18 @@ export default function BudgetFinance({
       </div>
 
       {currentStage === 4 && (
-        <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(245, 158, 11, 0.03)', border: '1px solid var(--amber-glow)' }}>
+        <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--card-bg)', border: '2px solid var(--border-color)', flexWrap: 'wrap', gap: '16px' }}>
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-            <PieChart style={{ color: 'var(--amber-glow)' }} size={24} />
+            <PieChart size={24} />
             <div>
-              <h4 style={{ color: '#fff', fontSize: '14px', fontWeight: '700' }}>Очікується затвердження фінансового плану</h4>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginTop: '2px' }}>
-                Затвердьте кошторис туру, щоб запустити генерацію контрактів та юридичних документів.
+              <h4 style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: '900', textTransform: 'uppercase' }}>ЗАТВЕРДЖЕННЯ КОШТОРИСУ</h4>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>
+                Підтвердіть фінансову модель туру для переходу до генерації та підписання офіційних договорів.
               </p>
             </div>
           </div>
           <button className="btn btn-primary" onClick={onApprove}>
-            Затвердити бюджет туру
+            Затвердити бюджет
           </button>
         </div>
       )}
