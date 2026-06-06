@@ -52,7 +52,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
@@ -62,7 +61,7 @@ body {
   color: var(--text-primary);
   font-family: var(--font-sans);
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow: hidden; /* Prevents global page scrolling on desktop */
   -webkit-font-smoothing: antialiased;
 }
 
@@ -88,9 +87,10 @@ body {
   grid-template-columns: 240px 1fr 350px;
   height: 100vh;
   overflow: hidden;
+  min-height: 0;
 }
 
-/* Grid Folding */
+/* Responsive Grid Folding */
 @media (max-width: 1200px) {
   .app-container {
     grid-template-columns: 80px 1fr 320px;
@@ -104,16 +104,20 @@ body {
 }
 
 @media (max-width: 900px) {
+  body {
+    overflow: auto; /* Allow scrolling on mobile/tablet viewport */
+  }
   .app-container {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr auto;
     height: auto;
-    overflow-y: auto;
+    overflow: visible;
   }
   .sidebar, .agent-drawer {
     height: auto;
     border: none !important;
     border-bottom: 1px solid var(--border-color) !important;
+    overflow: visible !important;
   }
   .main-content {
     height: auto;
@@ -131,6 +135,8 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .sidebar-header {
@@ -139,6 +145,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .sidebar-header h2 {
@@ -155,6 +162,7 @@ body {
   flex-direction: column;
   gap: 6px;
   flex-grow: 1;
+  overflow-y: auto;
 }
 
 .nav-item {
@@ -170,6 +178,8 @@ body {
   font-size: 13px;
   cursor: pointer;
   text-align: left;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, color 0.15s ease;
 }
 
 .nav-item:hover:not(:disabled) {
@@ -200,6 +210,8 @@ body {
   flex-direction: column;
   gap: 24px;
   height: 100%;
+  min-height: 0;
+  scrollbar-gutter: stable; /* Prevents layout jump when scrollbar appears */
 }
 
 .page-header {
@@ -208,6 +220,7 @@ body {
   align-items: center;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 20px;
+  flex-shrink: 0;
 }
 
 .page-title h1 {
@@ -225,7 +238,7 @@ body {
   margin-top: 4px;
 }
 
-/* Cinematic Cards (Sleek scale animation on hover) */
+/* Cinematic Cards */
 .glass-card {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
@@ -233,10 +246,12 @@ body {
   padding: 24px;
   position: relative;
   box-shadow: var(--shadow-style);
+  flex-shrink: 0;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .glass-card:hover {
-  transform: translateY(-2px) scale(1.015);
+  transform: translateY(-2px) scale(1.01);
   border-color: rgba(229, 9, 20, 0.3);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(229, 9, 20, 0.15);
 }
@@ -246,7 +261,7 @@ body {
   box-shadow: 0 12px 30px rgba(229, 9, 20, 0.08);
 }
 
-/* Custom Buttons (Solid Red & Outline Dark) */
+/* Custom Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -261,6 +276,7 @@ body {
   outline: none;
   background: var(--pill-bg);
   color: var(--text-primary);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .btn:hover:not(:disabled) {
@@ -306,6 +322,8 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .agent-drawer-header {
@@ -314,6 +332,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .agent-drawer-header h3 {
@@ -350,6 +369,7 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .agent-status-card {
@@ -391,6 +411,8 @@ body {
   gap: 8px;
   background: rgba(0, 0, 0, 0.5);
   border-bottom: 1px solid var(--border-color);
+  min-height: 0;
+  scrollbar-gutter: stable;
 }
 
 .terminal-line {
@@ -410,11 +432,16 @@ body {
   margin-right: 6px;
 }
 
-/* User Actions Approval Pane */
+/* User Actions Approval Pane (Stable Height) */
 .approval-pane {
   padding: 20px;
   background: var(--card-bg);
   border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+  min-height: 165px; /* Keeps the bottom pane stable to prevent terminal resizing */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .approval-card {
@@ -433,7 +460,7 @@ body {
   text-transform: uppercase;
 }
 
-/* Status Pills (Rounded) */
+/* Status Pills */
 .status-pill {
   display: inline-flex;
   align-items: center;
