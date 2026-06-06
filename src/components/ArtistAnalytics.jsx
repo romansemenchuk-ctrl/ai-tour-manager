@@ -28,16 +28,16 @@ export default function ArtistAnalytics({
         /* Setup / Initialization Form */
         <div className="glass-card" style={{ maxWidth: '600px', margin: '40px auto', width: '100%' }}>
           <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-            <Flame size={48} style={{ color: 'var(--text-primary)', marginBottom: '16px' }} />
-            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-1.5px', color: 'var(--text-primary)' }}>ІНІЦІАЛІЗАЦІЯ ТУРУ</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '6px', fontFamily: 'var(--font-mono)' }}>
-              Введіть назву артиста для початку аналізу стрімінгів та визначення цільових міст ШІ-агентами.
+            <Flame size={48} style={{ color: 'var(--accent)', marginBottom: '16px' }} />
+            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', letterSpacing: '-0.5px' }}>Ініціалізувати новий тур</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '6px', lineHeight: '1.4' }}>
+              Введіть ім'я артиста для початку аналізу стрімінгів та визначення цільових міст ШІ-агентами.
             </p>
           </div>
           
           <form onSubmit={handleInit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: '800', marginBottom: '8px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
                 Ім'я артиста або гурту:
               </label>
               <input 
@@ -58,16 +58,16 @@ export default function ArtistAnalytics({
         /* Analytics View */
         <>
           <div className="glass-card">
-            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '900', color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'uppercase' }}>
-              <BarChart size={20} />
-              Статистика прослуховувань за містами: {artistName.toUpperCase()}
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <BarChart size={18} />
+              Статистика прослуховувань за містами: {artistName}
             </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginBottom: '24px', fontFamily: 'var(--font-mono)' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginBottom: '24px' }}>
               Profiler завантажив дані прослуховувань та розрахував оптимальні пороги цін квитків.
             </p>
 
             {/* Stark Monochrome SVG Chart */}
-            <div style={{ background: 'var(--bg-main)', padding: '20px', border: 'var(--border-width) solid var(--border-color)', marginBottom: '24px' }}>
+            <div style={{ background: 'var(--bg-main)', padding: '20px', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius)', marginBottom: '24px' }}>
               <svg viewBox="0 0 600 240" style={{ width: '100%', height: 'auto' }}>
                 {/* Horizontal Grid lines */}
                 {[0, 1, 2, 3].map((i) => (
@@ -98,15 +98,17 @@ export default function ArtistAnalytics({
 
                   return (
                     <g key={idx}>
-                      {/* Brutalist Flat Bar (Black fill with White border in dark theme, or vice versa) */}
+                      {/* Premium Soft Filled Bar */}
                       <rect 
                         x={x} 
                         y={y} 
                         width={barWidth} 
                         height={barHeight} 
-                        fill="var(--card-bg)"
-                        stroke="var(--border-color)"
-                        strokeWidth="2"
+                        fill="var(--accent)"
+                        fillOpacity="0.12"
+                        stroke="var(--accent)"
+                        strokeWidth="1.5"
+                        rx="4"
                         style={{ cursor: 'pointer' }}
                       />
                       {/* Value label */}
@@ -128,9 +130,8 @@ export default function ArtistAnalytics({
                         fill="var(--text-primary)" 
                         fontSize="11" 
                         textAnchor="middle" 
-                        fontWeight="800"
+                        fontWeight="700"
                         fontFamily="var(--font-heading)"
-                        style={{ textTransform: 'uppercase' }}
                       >
                         {city.name}
                       </text>
@@ -147,27 +148,27 @@ export default function ArtistAnalytics({
               <div className="glass-card" key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <MapPin size={16} />
-                    <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '900', textTransform: 'uppercase', color: 'var(--text-primary)' }}>
+                    <MapPin size={16} style={{ color: 'var(--text-secondary)' }} />
+                    <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '800', color: 'var(--text-primary)' }}>
                       {city.name}, {city.country}
                     </h4>
                   </div>
                   <span className="status-pill status-scouted">
-                    {city.estimatedDraw} ЧОЛ.
+                    {city.estimatedDraw} чол.
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-around', background: 'var(--bg-main)', border: '1px solid var(--border-color)', padding: '12px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-around', background: 'var(--bg-main)', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius)', padding: '12px' }}>
                   <div style={{ textAlign: 'center' }}>
                     <span style={{ fontSize: '9px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>Квиток (GA)</span>
-                    <p style={{ fontSize: '18px', fontWeight: '900', color: 'var(--text-primary)', marginTop: '4px' }}>
+                    <p style={{ fontSize: '18px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
                       ${city.ticketPriceGA}
                     </p>
                   </div>
                   <div style={{ width: '1px', background: 'var(--border-color)' }}></div>
                   <div style={{ textAlign: 'center' }}>
                     <span style={{ fontSize: '9px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>Квиток (VIP)</span>
-                    <p style={{ fontSize: '18px', fontWeight: '900', color: 'var(--text-primary)', marginTop: '4px' }}>
+                    <p style={{ fontSize: '18px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
                       ${city.ticketPriceVIP}
                     </p>
                   </div>
@@ -210,12 +211,12 @@ export default function ArtistAnalytics({
           </div>
 
           {currentStage === 1 && (
-            <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--card-bg)', border: '2px solid var(--border-color)', flexWrap: 'wrap', gap: '16px' }}>
+            <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--card-bg)', border: '1px solid var(--border-color)', flexWrap: 'wrap', gap: '16px' }}>
               <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <Info size={24} />
+                <Info size={20} style={{ color: 'var(--text-secondary)' }} />
                 <div>
-                  <h4 style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: '900', textTransform: 'uppercase' }}>ЗАТВЕРДЖЕННЯ МІСТ ТУРУ</h4>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>
+                  <h4 style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: '800' }}>ЗАТВЕРДЖЕННЯ МІСТ ТУРУ</h4>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginTop: '2px' }}>
                     Будь ласка, перевірте ціни квитків та затвердіть шортлист міст для запуску пошуку майданчиків.
                   </p>
                 </div>
